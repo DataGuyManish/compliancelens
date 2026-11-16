@@ -1,0 +1,22 @@
+{
+  "name": "compliancelens_pipeline",
+  "trigger": {
+    "_comment_file_arrival": "Prefer a file-arrival trigger on /Volumes/compliancelens/landing/patients. Databricks Free Edition: verify availability; fallback is the schedule below (every 5 min).",
+    "cron": {"quartz_cron_expression": "0 */5 * * * ?", "timezone_id": "UTC"}
+  },
+  "tasks": [
+    {"task_key": "ingest", "notebook_path": "/Workspace/compliancelens/notebooks/01_ingest"},
+    {"task_key": "silver", "depends_on": [{"task_key": "ingest"}],
+     "notebook_path": "/Workspace/compliancelens/notebooks/02_silver"},
+    {"task_key": "gold", "depends_on": [{"task_key": "silver"}],
+     "notebook_path": "/Workspace/compliancelens/notebooks/03_gold"},
+    {"task_key": "quality_drift", "depends_on": [{"task_key": "gold"}],
+     "notebook_path": "/Workspace/compliancelens/notebooks/04_quality_drift"},
+    {"task_key": "pii_policy_score", "depends_on": [{"task_key": "quality_drift"}],
+     "notebook_path": "/Workspace/compliancelens/notebooks/05_pii_policy_score"},
+    {"task_key": "report", "depends_on": [{"task_key": "pii_policy_score"}],
+     "notebook_path": "/Workspace/compliancelens/notebooks/06_report"}
+  ],
+  "email_notifications": {"on_failure": ["data-engineering@example.com"]},
+  "max_retries": 1
+}

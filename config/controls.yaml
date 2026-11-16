@@ -1,0 +1,35 @@
+# Indicative mapping of ComplianceLens finding types to regulatory controls.
+# DISCLAIMER: these mappings are indicative engineering signals only.
+# They are NOT legal advice and NOT a compliance certification.
+jurisdiction_notes:
+  dpdp: "Digital Personal Data Protection Act, 2023 (India)"
+  gdpr: "General Data Protection Regulation (EU) 2016/679"
+mappings:
+  pii_exposed:
+    indicative_controls:
+      - ref: "DPDP Act S.8(5)"  # security safeguards
+        note: "Reasonable security safeguards to prevent personal data breach"
+      - ref: "DPDP Act S.8(7)"  # erasure
+        note: "Data no longer necessary for the purpose must be erased"
+      - ref: "GDPR Art. 9"
+        note: "Special-category (health) data requires explicit protection"
+      - ref: "GDPR Art. 32"
+        note: "Security of processing"
+  quality_check_failed:
+    indicative_controls:
+      - ref: "DPDP Act S.8(3)"  # accuracy
+        note: "Ensure accuracy of personal data where it is used for decisions"
+      - ref: "GDPR Art. 5(1)(d)"
+        note: "Accuracy principle"
+  schema_drift:
+    indicative_controls:
+      - ref: "GDPR Art. 25"
+        note: "Data protection by design and by default"
+      - ref: "DPDP Act S.8(5)"
+        note: "Unplanned schema changes can bypass safeguards"
+  unmasked_identifier:
+    indicative_controls:
+      - ref: "GDPR Art. 25"
+        note: "Pseudonymisation as a privacy-by-design measure"
+      - ref: "DPDP Act S.8(5)"
+        note: "Masking reduces breach impact"

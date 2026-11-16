@@ -1,0 +1,21 @@
+# Transparent compliance-score weights. Each component can cost at most its weight.
+# Score = 100 - sum(weight * normalized_component). Normalization is explained in scoring.py.
+version: 1
+components:
+  null_rate:
+    weight: 20
+    note: "share of required columns that are null (per checked column)"
+  quality_failures:
+    weight: 25
+    note: "fraction of executed checks that failed"
+  unmasked_pii:
+    weight: 30
+    note: "unmasked PII findings, saturated at cap"
+    cap: 20
+  drift_events:
+    weight: 15
+    note: "schema drift events, saturated at cap"
+    cap: 5
+  orphan_rate:
+    weight: 10
+    note: "orphaned child rows / total child rows"

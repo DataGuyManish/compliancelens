@@ -1,0 +1,39 @@
+# ComplianceLens policy rules.
+# Each rule: `when` conditions (ALL must match a finding) -> `actions`.
+# Valid actions: mask, quarantine, block_promotion, alert_critical, alert_warning, alert_info
+# Valid severities (ascending): low < medium < high < critical
+version: 1
+rules:
+  - name: mask_pii_in_gold
+    description: Never let detected PII reach the gold layer unmasked
+    when:
+      finding: pii_exposed
+      layer: gold
+    actions: [mask, alert_critical]
+
+  - name: quarantine_high_quality_failures
+    description: High/critical quality findings route rows to quarantine
+    when:
+      finding: quality_check_failed
+      min_severity: high
+    actions: [quarantine, alert_warning]
+
+  - name: block_on_critical_drift
+    description: Critical schema drift (dropped column) blocks promotion
+    when:
+      finding: schema_drift
+      min_severity: critical
+    actions: [block_promotion, alert_critical]
+
+  - name: alert_on_low_score
+    description: Compliance score below threshold pages the data owner
+    when:
+      finding: compliance_score
+      below: 80
+    actions: [alert_critical]
+
+  - name: warn_on_drift
+    description: Any drift event is at least worth a warning
+    when:
+      finding: schema_drift
+    actions: [alert_warning]
